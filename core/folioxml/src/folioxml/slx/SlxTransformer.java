@@ -162,7 +162,13 @@ public class SlxTransformer implements ISlxTokenWriter {
 
         //Pass tags to writeTag(), pass others on to the receiver.
         if (t.isTag()) {
-            writeTag(t);
+            try {
+                writeTag(t);
+            }catch(Exception e){
+                System.out.println("Error writing tag");
+                System.out.println(e);
+                System.out.println("******");
+            }
             //Pass text to writeText() for entity splitting
         } else if (t.type == SlxToken.TokenType.Text) {
             writeText(t);

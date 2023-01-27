@@ -18,7 +18,9 @@ public class Notes implements NodeListProcessor {
         NodeList objects = nodes.filterByTagName("note", true);
         for (Node t : objects.list()) {
             String id = "note_" + UUID.randomUUID().toString();
-            String heading = t.get("title").replace("'", "\\'"); //TODO: AND html encoding is needed too...
+            String heading = t.get("title");
+            if (heading == null) continue;
+            heading = heading.replace("'", "\\'"); //TODO: AND html encoding is needed too...
             Node link = new Node("<a class=\"highslide noteIcon\" href=\"#\" onclick=\"return hs.htmlExpand(this, { maincontentId: '" + id + "', headingText: '" + heading + "'})\"><img src=\"" + imageDataUri + "\" alt=\"Notes\" /></a>");
             t.insertBeforeThis(link);
             t.setTagName("div", true);

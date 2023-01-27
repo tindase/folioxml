@@ -39,7 +39,17 @@ public class FolioSlxTranslator {
             t = new SlxToken(SlxToken.TokenType.Comment, "<!--" + ft.text.replaceAll("--", "-&#x002D") + "-->");  //Added -- encoding.
         } else if (ft.type == FolioToken.TokenType.Tag) {
             //Tag conversion is the difficult part. This goes in a separate function
-            t = convertTag(ft);
+            try {
+                t = convertTag(ft);
+            } catch (Exception e) {
+                System.out.println("Error converting tag");
+                System.out.println(ft.tagName);
+                System.out.println(ft.tagOptions);
+                System.out.println(ft.text);
+                System.out.println("----------");
+                System.out.print(e);
+                return null;
+            }
 
         } else {
             throw new InvalidMarkupException("TokenType.None is not allowed");
@@ -485,7 +495,7 @@ public class FolioSlxTranslator {
         //LN level definition
         if (ft.matches("LN")) {
             List<String> withoutCommas = new ArrayList<String>();
-            for(String s: ft.getOptionsArray()){
+            for (String s : ft.getOptionsArray()) {
                 withoutCommas.add(s.replace(',', ' '));
             }
             return new SlxToken("<infobase-meta type=\"levels\"/>").set("content", join(withoutCommas));
@@ -527,10 +537,10 @@ public class FolioSlxTranslator {
         //Now we only have opening tags to deal with.
         if (ft.matches("RO")) {
             /*<RO> is the Row Delimiter. <RO> defines the start of a row. The current row is ended when a new row begins (or you may explicitly end the row with </RO>).
-    		 * A table may have any number of rows. Any row in the table may be a header row. See Row Attributes for more information.
-    		 * Row attributes affect single rows in the table. Row attributes include:
-    		 * HE � Marks the row as a Header Row. Tables may have more than one header row.
-    		 */
+             * A table may have any number of rows. Any row in the table may be a header row. See Row Attributes for more information.
+             * Row attributes affect single rows in the table. Row attributes include:
+             * HE � Marks the row as a Header Row. Tables may have more than one header row.
+             */
 
             boolean isHeader = "HE".equalsIgnoreCase(ft.get(0));
 

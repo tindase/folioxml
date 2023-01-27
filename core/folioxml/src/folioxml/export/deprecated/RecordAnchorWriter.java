@@ -22,8 +22,9 @@ public class RecordAnchorWriter implements NodeListProcessor {
         //Rename the record
         NodeList results = nodes.searchOuter(new NodeFilter("record"));
         for (Node n : results.list()) {
-            String rid = n.get("folioId").toLowerCase();
+            String rid = n.get("folioId");
             if (rid != null) {
+                rid = rid .toLowerCase();
                 n.set("id", "rid" + rid);
                 Node c;
                 try {
